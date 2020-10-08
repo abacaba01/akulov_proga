@@ -13,14 +13,13 @@ def screen_update(x, y):
     x - кордината по х, нужна для обновления цвета
     y - указатель на время суток в зависимости от остатка при делении на 2
      """
-    if x<0:
+    if x < 0:
         time_of_day = (64, 64, 128 + 64)
     else:
         if x > 800:
             time_of_day = (64, 64, 128 + 64)
         else:
             t = ((x / 800) * 128) // 1
-
 
             if (y % 2) == 0:
                 if x <= 400:
@@ -135,12 +134,16 @@ def draw_sun(x, y, radius, z):
 
 
 """
-   создаем тик и название приложения, улучшаем все, что можно
+   создаем тик и название приложения, 
 """
 
 pygame.display.set_caption("My Game")
 done = False
 clock = pygame.time.Clock()
+
+'''
+создаем машинку
+'''
 
 pygame.mixer.music.load('LOLIPOP.mp3')
 pygame.mixer.music.play()
