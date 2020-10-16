@@ -10,11 +10,13 @@ screen = pygame.display.set_mode((1200, 600))
 pygame.display.set_caption("My Game")
 done = False
 clock = pygame.time.Clock()
+name = input()
 
 '''
 музыка
 '''
 
+pygame.mixer.init()
 pygame.mixer.music.load('minimal.mp3')
 pygame.mixer.music.play()
 pygame.mixer.music.set_volume(0.1)
@@ -191,10 +193,14 @@ while not done:
         text1 = f1.render('your final score ' + str(score), 1, (255, 255, 255))
         screen.blit(text1, (510, 300))
         number_of_tiks -= 1
-    if number_of_tiks < -1:
+    if number_of_tiks == -1:
         screen.blit(text1, (510, 300))
-        name = input()
         with open('players.txt', 'a') as f:
             print(name + ':' + str(score), file=f)
-        done = True
+    if number_of_tiks < -1:
+        pygame.display.update()
+        rect(screen, (0, 0, 0), (0, 0, 1200, 600))
+        text1 = f1.render('your final score ' + str(score), 1, (255, 255, 255))
+        screen.blit(text1, (510, 300))
+        number_of_tiks -= 1
 pygame.quit()
