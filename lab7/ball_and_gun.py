@@ -26,24 +26,14 @@ class Ball():
         self.check_walls()
 
     def check_walls(self):
-        n = [[1, 0], [0, 1]]
-        for i in range(2):
-            if self.coord[i] < self.rad:
-                self.coord[i] = self.rad
-                self.flip_vel(n[i])
-            elif self.coord[i] > SCREEN_SIZE[i] - self.rad:
-                self.coord[i] = SCREEN_SIZE[i] - self.rad
-                self.flip_vel(n[i])
-
-    def flip_vel(self, axis, coef_perp=1., coef_par=1.):
-        vel = np.array(self.vel)
-        n = np.array(axis)
-        n = n / np.linalg.norm(n)
-        vel_perp = vel.dot(n) * n
-        vel_par = vel - vel_perp
-        ans = -vel_perp * coef_perp + vel_par * coef_par
-        print(vel, ans)
-        self.vel = ans.astype(np.int).tolist()
+        if self.coord[0] < self.rad:
+            self.vel[0] *= -1
+        if self.coord[0] > 800 - self.rad:
+            self.vel[0] *= -1
+        if self.coord[1] < self.rad:
+            self.vel[1] *= -1
+        if self.coord[1] > 600 - self.rad:
+            self.vel[1] *= -1
 
 
 class Table():
