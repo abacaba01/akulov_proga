@@ -78,19 +78,20 @@ class Gun():
 
 class Target():
     def __init__(self, x=None, y=None, rad=None, color=None):
+        if rad == None:
+            self.rad = randint(20, 40)
         if color == None:
             self.color = (randint(0, 255), randint(0, 255), randint(0, 255))
         if x == None:
             self.x = randint(100, SCREEN_SIZE[0] - 100)
         if y == None:
             self.y = randint(100, SCREEN_SIZE[1] - 100)
-        if rad == None:
-            self.rad = randint(20, 40)
+
 
     def draw(self, screen):
         pg.draw.circle(screen, self.color, (self.x, self.y), self.rad)
 
-    def collide(self, ball):
+    def check_collide(self, ball):
         dist = (self.x - ball.coord[0]) ** 2 + (self.y - ball.coord[1]) ** 2
         mindist = (self.rad + ball.rad) ** 2
         if dist < mindist:
@@ -102,9 +103,10 @@ class Manager():
         self.balls = []
         self.target = []
         self.new_aim()
+        self.score = 0
 
     def new_aim(self):
-        for i in range(3):
+        for i in range(4):
             self.target.append(Target())
 
     def process(self, events, screen):
@@ -113,10 +115,7 @@ class Manager():
         self.gun.draw(screen)
         self.move()
         self.gun.preparation()
-        for ball in self.balls:
-            for target in self.target:
-                Target.collide(target, ball)
-
+        self.collide()
         return done
 
 
@@ -126,6 +125,25 @@ class Manager():
             ball.draw(screen)
         for target in self.target:
             target.draw(screen)
+
+    def collide(self):
+        l = len(self.target)
+        for ball in self.balls:
+            for i in range(0, l):
+                if Target.check_collide(self.target[i], ball) == 1:
+                    self.score += 1
+                    print(self.score)
+                    self.target.pop(i)
+                    return
+        if l == 0:
+            Manager.new_aim(self)
+
+
+
+
+
+
+
 
     def move(self):
         for ball in self.balls:
