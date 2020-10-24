@@ -17,6 +17,7 @@ class Ball():
         self.vel = vel
         self.rad = rad
 
+
     def draw(self, screen):
         pg.draw.circle(screen, self.color, self.coord, self.rad)
 
@@ -45,7 +46,10 @@ class Ball():
         ans = -vel_perp * coef_perp + vel_par * coef_par
         self.vel = ans.astype(np.int).tolist()
 
-
+    def check_alive(self):
+        v = self.vel[1] ** 2 + self.vel[0] ** 2
+        if v < 4 and self.coord[1] > SCREEN_SIZE[1] - 2 * self.rad:
+            return 0
 
 
 
@@ -116,6 +120,7 @@ class Manager():
         self.move()
         self.gun.preparation()
         self.collide()
+        self.rubbish()
         return done
 
 
@@ -127,21 +132,21 @@ class Manager():
             target.draw(screen)
 
     def collide(self):
-        l = len(self.target)
         for ball in self.balls:
-            for i in range(0, l):
+            for i in range(0, len(self.target)):
                 if Target.check_collide(self.target[i], ball) == 1:
                     self.score += 1
                     print(self.score)
                     self.target.pop(i)
                     return
-        if l == 0:
+        if len(self.target) == 0 and len(self.balls) == 0:
             Manager.new_aim(self)
 
-
-
-
-
+    def rubbish(self):
+        for i in range(len(self.balls)):
+            if Ball.check_alive(self.balls[i]) == 0:
+                self.balls.pop(i)
+                return
 
 
 
