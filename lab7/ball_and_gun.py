@@ -46,8 +46,8 @@ class Ball():
         self.vel = ans.astype(np.int).tolist()
 
 
-class Table():
-    pass
+
+
 
 class Gun():
     def __init__(self, coord=[30, SCREEN_SIZE[1] // 2], min_pow=10, max_pow=30):
@@ -77,13 +77,35 @@ class Gun():
                                 mouse_pos[0] - self.coord[0])
 
 class Target():
-    pass
+    def __init__(self, x=None, y=None, rad=None, color=None):
+        if color == None:
+            self.color = (randint(0, 255), randint(0, 255), randint(0, 255))
+        if x == None:
+            self.x = randint(100, SCREEN_SIZE[0] - 100)
+        if y == None:
+            self.y = randint(100, SCREEN_SIZE[1] - 100)
+        if rad == None:
+            self.rad = randint(20, 40)
+
+    def draw(self, screen):
+        pg.draw.circle(screen, self.color, (self.x, self.y), self.rad)
+
+    def collide(self, ball):
+        dist = (self.x - ball.coord[0]) ** 2 + (self.y - ball.coord[1]) ** 2
+        mindist = (self.rad + ball.rad) ** 2
+        if dist < mindist:
+           return 1
 
 class Manager():
     def __init__(self):
         self.gun = Gun()
-        self.table = Table()
         self.balls = []
+        self.target = []
+        self.new_aim()
+
+    def new_aim(self):
+        for i in range(3):
+            self.target.append(Target())
 
     def process(self, events, screen):
         done = self.handle_events(events)
@@ -91,12 +113,19 @@ class Manager():
         self.gun.draw(screen)
         self.move()
         self.gun.preparation()
+        for ball in self.balls:
+            for target in self.target:
+                Target.collide(target, ball)
+
         return done
+
 
     def draw(self, screen):
         screen.fill(BLACK)
         for ball in self.balls:
             ball.draw(screen)
+        for target in self.target:
+            target.draw(screen)
 
     def move(self):
         for ball in self.balls:
@@ -133,9 +162,12 @@ mgr = Manager()
 
 done = False
 
+score = 0
+
 while not done:
     clock.tick(30)
 
     done = mgr.process(pg.event.get(), screen)
-
     pg.display.flip()
+
+pg.quit()
