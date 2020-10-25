@@ -8,6 +8,11 @@ WHITE = (255, 255, 255)
 
 pg.init()
 
+pg.mixer.init()
+pg.mixer.music.load('kleo.mp3')
+pg.mixer.music.play()
+
+
 
 class Ball():
     def __init__(self, coord, vel, rad=10, color=None):
@@ -53,7 +58,7 @@ class Ball():
 
 
 class Score():
-    def __init__(self, numb_used=0, numb_dest=0, numb_used_final=0, time=180, time_okr=0):
+    def __init__(self, numb_used=0, numb_dest=0, numb_used_final=0, time=2 * 1800, time_okr=0):
         self.numb_used = numb_used
         self.numb_dest = numb_dest
         self.time = time
